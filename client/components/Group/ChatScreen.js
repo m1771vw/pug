@@ -15,7 +15,7 @@ import { bubbleBackgroundColors } from '../../constants';
 
 import { getChatMessages } from '../Utils'
 
-import { sendMessage } from '../Redux/Actions'
+import { sendMessage, leaveRoom, unsubscribeFromRoom } from '../Redux/Actions'
 
 /**
  * Helper function to create messages to render from server response
@@ -116,8 +116,10 @@ const mapStateToProps = ({ chatReducer }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  sendMessage: ([message]) => dispatch(sendMessage(message.text))
+  sendMessage: ([message]) => dispatch(sendMessage(message.text)),
   // TODO: - Add dispatch here
+  leaveRoom: () => dispatch(leaveRoom()),
+  unsubscribeFromRoom: () => dispatch(unsubscribeFromRoom())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

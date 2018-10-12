@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import {
   fetchJoinableRooms,
   fetchJoinedRooms,
-  changeChatRoom
+  changeChatRoom,
+  checkRoomAvailability,
+  joinRoom
 } from '../Redux/Actions';
 
 import { Text, View } from 'react-native'
@@ -87,7 +89,9 @@ const mapDispatchToProps = dispatch => ({
   fetchJoinableRooms: (game, userId) => dispatch(fetchJoinableRooms(game, userId)),
   fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId)),
   // ToDo: - Add action dispatch
-  
+  checkRoomAvailability: () => dispatch(checkRoomAvailability()),
+  joinRoom: () => dispatch(joinRoom())
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRooms);
