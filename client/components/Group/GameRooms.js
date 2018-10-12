@@ -29,6 +29,17 @@ class GameRooms extends Component {
     navigation.navigate('Chatroom', { title: room.name });
   }
 
+  /** Add Join Room Logic  */
+  joinRoom = room => () => {
+    const { navigation, changeChatRoom } = this.props;
+    // Axios call to check if room is full
+    if(allowed) {
+
+    }
+    changeChatRoom(room.id);
+    navigation.navigate('Chatroom', { title: room.name});
+  }
+
   render() {
     const { joinableRooms, joinedRooms } = this.props;
     return (
@@ -74,7 +85,9 @@ const mapStateToProps = ({ roomReducer }) => ({
 const mapDispatchToProps = dispatch => ({
   changeChatRoom: roomId => dispatch(changeChatRoom(roomId)),
   fetchJoinableRooms: (game, userId) => dispatch(fetchJoinableRooms(game, userId)),
-  fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId))
+  fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId)),
+  // ToDo: - Add action dispatch
+  
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRooms);

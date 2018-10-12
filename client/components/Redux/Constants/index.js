@@ -15,3 +15,9 @@ export const NEW_MESSAGE = 'NEW_MESSAGE';
 
 export const CHANGE_CHATROOM = 'CHANGE_CHATROOM';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+
+export const CHECK_ROOM_AVAILABILITY = 'CHECK_ROOM_AVAILABILITY';
+export const JOIN_ROOM               = 'JOIN_ROOM';
+
+export const LEAVE_ROOM              = 'LEAVE_ROOM';
+export const UNSUBSCRIBE             = 'UNSUBSCRIBE';

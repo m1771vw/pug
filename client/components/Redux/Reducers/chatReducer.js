@@ -6,7 +6,11 @@ import {
   NEW_MESSAGE,
   SUBSCRIBE,
   CHANGE_CHATROOM,
-  SEND_MESSAGE
+  SEND_MESSAGE,
+  CHECK_ROOM_AVAILABILITY, 
+  JOIN_ROOM,
+  LEAVE_ROOM,
+  UNSUBSCRIBE
 } from '../Constants'
 
 const _createRoom = ({ roomId, messages }) => ({
@@ -83,6 +87,23 @@ const chatReducer = (state = initialState, action) => {
         text
       });
       return state;
+      // TODO :- Check if this should be in here
+    case CHECK_ROOM_AVAILABILITY:
+      return {
+        ...state // Check for room availability 
+      }
+    case JOIN_ROOM:
+      return {
+        ...state
+      }
+    case LEAVE_ROOM:
+      return {
+        ...state
+      }
+    case UNSUBSCRIBE:
+      return {
+        ...state
+      }
     case DISCONNECTED:
     case CONNECTION_REQUEST:
     default:

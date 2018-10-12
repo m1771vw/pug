@@ -10,7 +10,11 @@ import {
   DISCONNECTED,
   SUBSCRIBE,
   CHANGE_CHATROOM,
-  SEND_MESSAGE
+  SEND_MESSAGE,  
+  CHECK_ROOM_AVAILABILITY, 
+  JOIN_ROOM,
+  LEAVE_ROOM,
+  UNSUBSCRIBE
 } from '../Constants'
 
 import {
@@ -35,7 +39,6 @@ const _createChatManager = (userId, url, instanceLocator) => {
 // Our initial connection action
 export const connectChatKit = userId => async dispatch => {
   dispatch({ type: CONNECTION_REQUEST });
-
   try {
     let chatManager = _createChatManager(userId, CHATKIT_TOKEN_PROVIDER_ENDPOINT, CHATKIT_INSTANCE_LOCATOR);
     let currentUser = await chatManager.connect();
@@ -44,15 +47,15 @@ export const connectChatKit = userId => async dispatch => {
     dispatch(subscribeToAllJoined(userId));
 
   } catch (err) {
-
     console.error(`Error on connection ${err}`);
     dispatch({ type: DISCONNECTED });
-
   }
 }
 
+/**
+ *  interacts with currentUser (ChatKit)
+ */
 
-// interacts with currentUser (ChatKit)
 export const sendMessage = text => ({ type: SEND_MESSAGE, text })
 
 export const changeChatRoom = roomId => ({ type: CHANGE_CHATROOM, roomId })
@@ -66,6 +69,14 @@ export const subscribeToAllJoined = userId => async dispatch => {
   })
 }
 
+// TODO: - Finish actions
+export const checkRoomAvailability = () => ({ type:CHECK_ROOM_AVAILABILITY,  })
+
+export const joinRoom = () => ({ type:JOIN_ROOM, })
+
+export const leaveRoom = () => ({ type:LEAVE_ROOM, })
+
+export const unsubscribeFromRoom = () => ({ type:UNSUBSCRIBE })
 
 /**
  * Interacts with our /server
