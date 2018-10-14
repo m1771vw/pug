@@ -117,7 +117,6 @@ const mapStateToProps = ({ chatReducer }) => ({
 
 const mapDispatchToProps = dispatch => ({
   sendMessage: ([message]) => dispatch(sendMessage(message.text)),
-  // TODO: - Add dispatch here
   leaveRoom: () => dispatch(leaveRoom()),
   unsubscribeFromRoom: () => dispatch(unsubscribeFromRoom())
 })

@@ -33,8 +33,9 @@ class GameRooms extends Component {
 
   /** Add Join Room Logic  */
   joinRoom = room => () => {
-    const { navigation, changeChatRoom } = this.props;
+    const { navigation, changeChatRoom, checkRoomAvailability } = this.props;
     // Axios call to check if room is full
+    console.log("Trying to join room");
     if(allowed) {
 
     }
@@ -67,7 +68,7 @@ class GameRooms extends Component {
           {
             joinableRooms.map((room) => (
               <ListItem
-                onPress={this.selectRoom(room)}
+                onPress={this.joinRoom(room)}
                 key={room.id}
                 title={room.name}
               />

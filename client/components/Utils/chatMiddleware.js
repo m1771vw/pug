@@ -11,7 +11,7 @@ export default chatMiddleware = store => next => async action => {
   const { chatReducer } = store.getState();
   let { currentUser } = chatReducer;
   console.log("IN MIDDLEWARE:", action.type);
-  console.log("CURRENT USER:", currentUser);
+  // console.log("CURRENT USER:", currentUser);
 
   if (action.type === SUBSCRIBE && !currentUser.roomSubscriptions[action.roomId]) {
     try {
