@@ -1,9 +1,7 @@
-const express = require('express');
-const router = express.Router();
-
 const Chatkit = require('@pusher/chatkit-server');
-
 const { INSTANCE_LOCATOR, SECRET_KEY } = process.env;
+
+const { validGames, filterRooms, extractGameName } = require('../utils');
 
 // --- initialize chatkit ---
 const chatkit = new Chatkit.default({
@@ -12,7 +10,7 @@ const chatkit = new Chatkit.default({
 });
 
 // --- list of valid games used for creating rooms ---
-const validGames = [
+const validGamesList = [
   {
     server: "PUBG",
     title: "PUBG",
@@ -40,42 +38,30 @@ const validGames = [
   }
 ]
 
-// --- helper functions ---
-
-// extracts the Game name from a room created
-const extractGameName = fullName => fullName.split('-')[0];
-
-// get only games with the appropriate prefix
-const _filterRooms = game => ({ name }) => {
-  let gameName = extractGameName(name);
-  return validGames.find(g => g.server === gameName) !== undefined && gameName === game;
-}
-
-const _validGames = ({ name }) => validGames.find(g => g.server === extractGameName(name)) !== undefined;
 
 /**
  * Returns a dict of valid games 
  * -> Keys are need to send back for filter
  * -> values are display names
  */
-router.get('/gamelist', (req, res) => {
-  res.json(validGames);
-})
+const getValidGames = (req, res) => {
+  res.json(validGamesList);
+}
 
 
 /**
  * Check if I can join a room
  * 
  */
-router.get('/checkroom', async (req, res) => {
-  
+const canJoinRoom = async (req, res) => {
+
   try {
     let { userId, roomId } = req.query;
     // get joinable rooms and then find it
 
     let joinableRooms = await chatkit.getUserJoinableRooms({ userId })
 
-    joinableRooms = joinableRooms.filter(_validGames);
+    joinableRooms = joinableRooms.filter(validGames(validGamesList));
     joinableRooms = joinableRooms.map(room => {
       let maxOccupancy = parseInt(room.name.split('-')[2]);
       let amtUsers = room.member_user_ids.length;
@@ -94,9 +80,9 @@ router.get('/checkroom', async (req, res) => {
     res.send({ allowed: !full })
 
   } catch (err) {
-    res.status(404).send(err);
+    res.status(404).send(err.message);
   }
-})
+}
 
 
 
@@ -109,12 +95,12 @@ router.get('/checkroom', async (req, res) => {
  * 
  * Use the '/gamelist' to generate a valid list of games to create groups with
  */
-router.get('/gamerooms', async (req, res) => {
+const getAllJoinableRoomsOfSpecificGame = async (req, res) => {
   try {
     let { game, userId } = req.query;
     let joinableRooms = await chatkit.getUserJoinableRooms({ userId })
 
-    joinableRooms = joinableRooms.filter(_filterRooms(game));
+    joinableRooms = joinableRooms.filter(filterRooms(game, validGamesList));
     joinableRooms = joinableRooms.map(room => {
       let maxOccupancy = parseInt(room.name.split('-')[2]);
       let amtUsers = room.member_user_ids.length;
@@ -130,20 +116,21 @@ router.get('/gamerooms', async (req, res) => {
 
     res.send(joinableRooms);
   } catch (err) {
-    res.status(err.status).send(err);
+    console.error(err);
+    res.status(err.status).send(err.message);
   }
-})
+}
 
 /**
  * all rooms a user is a part of; filtered for valid games but not specific games (LOL PUBG etc shown)
  */
-router.get('/alljoinedrooms', async (req, res) => {
+const getAllJoinedRooms = async (req, res) => {
   try {
 
     let { userId } = req.query;
     let joinableRooms = await chatkit.getUserRooms({ userId })
 
-    joinableRooms = joinableRooms.filter(_validGames);
+    joinableRooms = joinableRooms.filter(validGames(validGamesList));
     joinableRooms = joinableRooms.map(room => {
       let maxOccupancy = parseInt(room.name.split('-')[2]);
       let amtUsers = room.member_user_ids.length;
@@ -160,19 +147,20 @@ router.get('/alljoinedrooms', async (req, res) => {
     res.send(joinableRooms);
 
   } catch (err) {
-    res.status(404).send(err);
+    console.error(err);
+    res.status(404).send(err.message);
   }
-})
+}
 
 /**
  * All rooms that the user is a part of based on game
  */
-router.get('/userrooms', async (req, res) => {
+const getAllJoinedRoomsOfSpecificGame = async (req, res) => {
   try {
     let { game, userId } = req.query
     let rooms = await chatkit.getUserRooms({ userId });
 
-    rooms = rooms.filter(_filterRooms(game));
+    rooms = rooms.filter(filterRooms(game, validGamesList));
     rooms = rooms.map(room => {
       let maxOccupancy = parseInt(room.name.split('-')[2]);
       let amtUsers = room.member_user_ids.length;
@@ -189,21 +177,23 @@ router.get('/userrooms', async (req, res) => {
     res.send(rooms);
 
   } catch (err) {
-    res.status(404).send(err);
+    console.error(err);
+    res.status(404).send(err.message);
   }
-})
+}
 
 
 /**
  * Grabs all users in server
  */
-router.get('/allusers', async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
     res.send(await chatkit.getUsers());
   } catch ({ status, headers, ...err_messages }) {
+    console.error(err_messages)
     res.status(status).send(err_messages);
   }
-})
+}
 
 /**
  * Create a new user
@@ -217,14 +207,36 @@ router.get('/allusers', async (req, res) => {
  * > Profile info
  * > Game info (usernames & discord connection)
  */
-router.post('/createuser', async (req, res) => {
+const createUser = async (req, res) => {
   try {
     let { id, name } = req.body;
     let user = await chatkit.createUser({ id, name });
     res.send(user);
   } catch ({ status, headers, ...err_messages }) {
+    console.error(err_messages)
     res.status(status).send(err_messages);
   }
-});
+}
 
-module.exports = router;
+
+const loginUser = async (req, res) => {
+
+  let { userId, password } = req.body;
+
+  // always allowed right now
+  res.send({
+    valid: true,
+    token: 'abc'
+  })
+}
+
+module.exports = {
+  getValidGames,
+  canJoinRoom,
+  loginUser,
+  createUser,
+  getAllUsers,
+  getAllJoinableRoomsOfSpecificGame,
+  getAllJoinedRooms,
+  getAllJoinedRoomsOfSpecificGame
+};

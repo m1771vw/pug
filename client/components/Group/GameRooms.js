@@ -44,6 +44,14 @@ class GameRooms extends Component {
   }
 
   render() {
+    /**
+     * ISSUE:
+     * 
+     * Should render a loading gif whenever in process of fetching new JoinableRooms / JoinedRooms
+     * Currently showing preloaded rooms before changing to new ones
+     * 
+     */
+
     const { joinableRooms, joinedRooms } = this.props;
     return (
       <View style={{ flex: 1 }}>

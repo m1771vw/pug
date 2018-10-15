@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 
 // import chatMiddleware from './components/Utils';
 import rootReducer from './components/Redux/Reducers';
-import Root from './components/root';
+import Root from './components/Routing/Root';
 
 import chatMiddleware from './components/Utils/chatMiddleware'
 

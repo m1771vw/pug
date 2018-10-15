@@ -17,32 +17,11 @@ import { getChatMessages } from '../Utils'
 
 import { sendMessage, leaveRoom, unsubscribeFromRoom } from '../Redux/Actions'
 
-/**
- * Helper function to create messages to render from server response
- * 
- * Things to do:
- * -> dynamically apply avatar based on a user's profile
- */
-const extractMsgDetails = (data) => {
-  const { id, senderId, text, createdAt } = data;
-  const incomingMessage = {
-    _id: id,
-    text: text,
-    createdAt: new Date(createdAt),
-    user: {
-      _id: senderId,
-      name: senderId,
-      avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmXGGuS_PrRhQt73sGzdZvnkQrPXvtA-9cjcPxJLhLo8rW-sVA"
-    }
-  };
-  return incomingMessage;
-}
-
 
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('title', 'A Nested Details Screen'),
+      title: navigation.getParam('title', 'A Nested Details Screen')
     };
   };
 
@@ -55,12 +34,8 @@ class ChatScreen extends React.Component {
         <Bubble
           {...props}
           textStyle={{
-            right: {
-              color: 'white'
-            },
-            left: {
-              color: 'white'
-            }
+            right: { color: 'white' },
+            left: { color: 'white' }
           }}
           wrapperStyle={{ left: { backgroundColor } }}
         />
@@ -73,12 +48,8 @@ class ChatScreen extends React.Component {
         <Bubble
           {...props}
           textStyle={{
-            right: {
-              color: 'white'
-            },
-            left: {
-              color: 'white'
-            }
+            right: { color: 'white' },
+            left: { color: 'white' }
           }}
           wrapperStyle={{ left: { backgroundColor } }}
         />
@@ -94,14 +65,14 @@ class ChatScreen extends React.Component {
   }
 
   render() {
-    const { messages, sendMessage} = this.props;
+    const { messages, sendMessage } = this.props;
     return (
       <View style={{ backgroundColor: "#F0F8FF", flex: 1 }}>
         <GiftedChat
           messages={messages}
           onSend={sendMessage}
           user={{
-            _id: CHATKIT_USER_NAME
+            _id: CHATKIT_USER_NAME      // FUTURE: add to redux or async storage later
           }}
           renderBubble={this.renderBubble}
         />

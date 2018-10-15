@@ -14,12 +14,15 @@ import {
   CHECK_ROOM_AVAILABILITY, 
   JOIN_ROOM,
   LEAVE_ROOM,
-  UNSUBSCRIBE
+  UNSUBSCRIBE,
+  NO_JOINED_ROOMS,
+  ERROR_SUBSCRIBING
 } from '../Constants'
 
 import {
   CHATKIT_TOKEN_PROVIDER_ENDPOINT,
-  CHATKIT_INSTANCE_LOCATOR
+  CHATKIT_INSTANCE_LOCATOR,
+  SERVER_URL
 } from '../../../config/info';
 
 
@@ -63,10 +66,24 @@ export const changeChatRoom = roomId => ({ type: CHANGE_CHATROOM, roomId })
 export const subscribeToRoom = (roomId, length) => ({ type: SUBSCRIBE, roomId, length })
 
 export const subscribeToAllJoined = userId => async dispatch => {
-  let { data: rooms } = await axios.get(`http://localhost:5000/alljoinedrooms?userId=${userId}`);
-  rooms.forEach(({ id }) => {
-    dispatch(subscribeToRoom(id, rooms.length))
-  })
+  try {
+    let { data: rooms } = await axios.get(`${SERVER_URL}/alljoinedrooms?userId=${userId}`);
+
+    console.table(rooms);
+
+    rooms.forEach(({ id }) => {
+      dispatch(subscribeToRoom(id, rooms.length))
+    })
+
+    if (rooms.length === 0) {
+      dispatch({ type: NO_JOINED_ROOMS })
+    }
+
+  } catch (err) {
+    console.log("USER ID: ", userId)
+    console.error(err);
+    dispatch({ type: ERROR_SUBSCRIBING })
+  }
 }
 
 // TODO: - Finish actions
@@ -82,16 +99,16 @@ export const unsubscribeFromRoom = () => ({ type:UNSUBSCRIBE })
  * Interacts with our /server
  */
 export const fetchValidGames = () => async dispatch => {
-  let { data } = await axios.get('http://localhost:5000/gamelist');
+  let { data } = await axios.get(`${SERVER_URL}/gamelist`);
   dispatch({ type: FETCH_VALID_GAMES, validGames: data });
 }
 
 export const fetchJoinableRooms = (game, userId) => async dispatch => {
-  let { data } = await axios.get(`http://localhost:5000/gamerooms?game=${game}&userId=${userId}`);
+  let { data } = await axios.get(`${SERVER_URL}/gamerooms?game=${game}&userId=${userId}`);
   dispatch({ type: FETCH_JOINABLE, rooms: data });
 }
 
 export const fetchJoinedRooms = (game, userId) => async dispatch => {
-  let { data } = await axios.get(`http://localhost:5000/userrooms?game=${game}&userId=${userId}`);
+  let { data } = await axios.get(`${SERVER_URL}/userrooms?game=${game}&userId=${userId}`);
   dispatch({ type: FETCH_JOINED_ROOMS, rooms: data });
 }
