@@ -87,9 +87,13 @@ export const subscribeToAllJoined = userId => async dispatch => {
 }
 
 // TODO: - Finish actions
-export const checkRoomAvailability = () => ({ type:CHECK_ROOM_AVAILABILITY,  })
+export const checkRoomAvailability = (userId, roomId) => async dispatch => { 
+  let { data } = await axios.get(`${SERVER_URL}/checkroom?userId=${userId}&roomId=${roomId}`);
+  console.log("Checking if allowed to join: ", data.allowed);
+  dispatch({ type:CHECK_ROOM_AVAILABILITY, allowed: data.allowed})
+}
 
-export const joinRoom = () => ({ type:JOIN_ROOM, })
+export const joinRoom = (roomId) => ({ type:JOIN_ROOM, roomId })
 
 export const leaveRoom = () => ({ type:LEAVE_ROOM, })
 

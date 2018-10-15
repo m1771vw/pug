@@ -35,12 +35,15 @@ class GameRooms extends Component {
   joinRoom = room => () => {
     const { navigation, changeChatRoom, checkRoomAvailability } = this.props;
     // Axios call to check if room is full
+    let allowed = checkRoomAvailability(CHATKIT_USER_NAME, room.id);
     console.log("Trying to join room");
     if(allowed) {
-
+      joinRoom(room.id);
+      changeChatRoom(room.id);
+      navigation.navigate('Chatroom', { title: room.name});
+    } else {
+      console.log("Cannot join room");
     }
-    changeChatRoom(room.id);
-    navigation.navigate('Chatroom', { title: room.name});
   }
 
   render() {
@@ -98,8 +101,8 @@ const mapDispatchToProps = dispatch => ({
   fetchJoinableRooms: (game, userId) => dispatch(fetchJoinableRooms(game, userId)),
   fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId)),
   // ToDo: - Add action dispatch
-  checkRoomAvailability: () => dispatch(checkRoomAvailability()),
-  joinRoom: () => dispatch(joinRoom())
+  checkRoomAvailability: (userId, roomId) => dispatch(checkRoomAvailability(userId, roomId)),
+  joinRoom: (roomId) => dispatch(joinRoom(roomId))
 
 })
 

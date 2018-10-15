@@ -95,13 +95,14 @@ const chatReducer = (state = initialState, action) => {
       return state;
       // TODO :- Check if this should be in here
     case CHECK_ROOM_AVAILABILITY:
+      // Has 'allowed' accessible
       return {
         ...state // Check for room availability 
       }
     case JOIN_ROOM:
-      return {
-        ...state
-      }
+      console.log("REDUCER: Joining Room");
+      state.currentUser.joinRoom({ roomId: action.roomId });
+      return state;
     case LEAVE_ROOM:
       return {
         ...state
