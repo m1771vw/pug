@@ -100,17 +100,18 @@ const chatReducer = (state = initialState, action) => {
         ...state // Check for room availability 
       }
     case JOIN_ROOM:
-      console.log("REDUCER: Joining Room");
+    // TODO: Change to ({ roomID }) ?
+      console.log("REDUCER: Joining Room", action.roomId);
       state.currentUser.joinRoom({ roomId: action.roomId });
       return state;
     case LEAVE_ROOM:
-      return {
-        ...state
-      }
+      console.log("REDUCER: LEAVING ROOM: ", action.roomId)
+      state.currentUser.leaveRoom({ roomId: action. roomId });
+      return state;
     case UNSUBSCRIBE:
-      return {
-        ...state
-      }
+      console.log("REDUCER: UNSUBSCRIBING ROOM: ", action.roomId)
+      state.currentUser.roomSubscriptions[action.roomId].cancel();
+      return state;
     case DISCONNECTED:
     case CONNECTION_REQUEST:
     default:

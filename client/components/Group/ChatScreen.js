@@ -57,11 +57,19 @@ class ChatScreen extends React.Component {
     );
   }
 
-
   getBubbleBackgroundColor = (username) => {
     let currentUsersInRoom = this.props.currentUser.users.map(user => user.id);
     let usernameIndex = currentUsersInRoom.findIndex(user => user === username)
     return bubbleBackgroundColors[usernameIndex];
+  }
+
+  // TODO: - Still needs testing
+  leaveRoom = () => {
+    let { navigation, currentRoomId } = this.props;
+    console.log("ChatScreen: Leave Room pressed.");
+    unsubscribeFromRoom(currentRoomId);
+    leaveRoom(currentRoomId);
+    navigation.goBack();
   }
 
   render() {
@@ -83,13 +91,14 @@ class ChatScreen extends React.Component {
 
 const mapStateToProps = ({ chatReducer }) => ({
   currentUser: chatReducer.currentUser,
-  messages: getChatMessages(chatReducer)
+  messages: getChatMessages(chatReducer),
+  currentRoomId: chatReducer.currentRoomId
 })
 
 const mapDispatchToProps = dispatch => ({
   sendMessage: ([message]) => dispatch(sendMessage(message.text)),
-  leaveRoom: () => dispatch(leaveRoom()),
-  unsubscribeFromRoom: () => dispatch(unsubscribeFromRoom())
+  unsubscribeFromRoom: roomId => dispatch(unsubscribeFromRoom(roomId)),
+  leaveRoom: roomId => dispatch(leaveRoom(roomId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
