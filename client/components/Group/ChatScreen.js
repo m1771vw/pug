@@ -9,13 +9,13 @@ import {
   CHATKIT_USER_NAME
 } from '../../config/info';
 
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 import { bubbleBackgroundColors } from '../../constants';
 
 import { getChatMessages } from '../Utils'
 
-import { sendMessage } from '../Redux/Actions'
+import { sendMessage, leaveRoom, unsubscribeFromRoom } from '../Redux/Actions'
 
 
 class ChatScreen extends React.Component {
@@ -57,17 +57,25 @@ class ChatScreen extends React.Component {
     );
   }
 
-
   getBubbleBackgroundColor = (username) => {
     let currentUsersInRoom = this.props.currentUser.users.map(user => user.id);
     let usernameIndex = currentUsersInRoom.findIndex(user => user === username)
     return bubbleBackgroundColors[usernameIndex];
   }
 
+  _leaveRoom = () => {
+    let { navigation, currentRoomId, unsubscribeFromRoom, leaveRoom } = this.props;
+    console.log("CHATSCREEN: Leave Room pressed:", currentRoomId);
+    unsubscribeFromRoom(currentRoomId);
+    leaveRoom(currentRoomId);
+    navigation.goBack();
+  }
+
   render() {
     const { messages, sendMessage } = this.props;
     return (
       <View style={{ backgroundColor: "#F0F8FF", flex: 1 }}>
+        { messages.length === 0 && (<Text>Welcome to the Chatroom! Be the first to say Hello! 👋 </Text>)}
         <GiftedChat
           messages={messages}
           onSend={sendMessage}
@@ -76,18 +84,26 @@ class ChatScreen extends React.Component {
           }}
           renderBubble={this.renderBubble}
         />
+        {/* Temporary leave room button */}
+        <TouchableOpacity style={{borderWidth: 1, borderColor: 'black', width: 100, height: 25}} onPress={this._leaveRoom}>
+        <Text>Leave Room</Text>
+        </TouchableOpacity>
       </View>
+
     )
   }
 }
 
 const mapStateToProps = ({ chatReducer }) => ({
   currentUser: chatReducer.currentUser,
-  messages: getChatMessages(chatReducer)
+  messages: getChatMessages(chatReducer),
+  currentRoomId: chatReducer.currentRoomId
 })
 
 const mapDispatchToProps = dispatch => ({
-  sendMessage: ([message]) => dispatch(sendMessage(message.text))
+  sendMessage: ([message]) => dispatch(sendMessage(message.text)),
+  unsubscribeFromRoom: roomId => dispatch(unsubscribeFromRoom(roomId)),
+  leaveRoom: roomId => dispatch(leaveRoom(roomId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

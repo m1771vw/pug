@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import {
   fetchJoinableRooms,
   fetchJoinedRooms,
-  changeChatRoom
+  changeChatRoom,
+  checkRoomAvailability,
+  joinRoom
 } from '../Redux/Actions';
 
 import { Text, View } from 'react-native'
@@ -29,6 +31,18 @@ class GameRooms extends Component {
     navigation.navigate('Chatroom', { title: room.name });
   }
 
+  _joinRoom = room => () => {
+    const { navigation, changeChatRoom, checkRoomAvailability } = this.props;
+    let allowed = checkRoomAvailability(CHATKIT_USER_NAME, room.id);
+    if(allowed) {
+      changeChatRoom(room.id);
+      navigation.navigate('Chatroom', { title: room.name});
+    } else {
+      // TODO: - Need to do something when cannot join room.
+      console.log("Cannot join room");
+    }
+  }
+
   render() {
     /**
      * ISSUE:
@@ -41,6 +55,9 @@ class GameRooms extends Component {
     const { joinableRooms, joinedRooms } = this.props;
     return (
       <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 20 }}>
+          Joined Rooms
+        </Text>
         <List containerStyle={{ marginBottom: 20 }}>
           {
             joinedRooms.map((room) => (
@@ -52,17 +69,14 @@ class GameRooms extends Component {
             ))
           }
         </List>
-        {
-          /* 
-          Need to implement joining a room that I am currently not in; 
-          otherwise if I click the room it will yell that I am not authorized
-          */
-        }
+        <Text style={{ fontSize: 20 }}>
+          Joinable Rooms
+        </Text>
         <List containerStyle={{ marginBottom: 20 }}>
           {
             joinableRooms.map((room) => (
               <ListItem
-                onPress={this.selectRoom(room)}
+                onPress={this._joinRoom(room)}
                 key={room.id}
                 title={room.name}
               />
@@ -82,7 +96,9 @@ const mapStateToProps = ({ roomReducer }) => ({
 const mapDispatchToProps = dispatch => ({
   changeChatRoom: roomId => dispatch(changeChatRoom(roomId)),
   fetchJoinableRooms: (game, userId) => dispatch(fetchJoinableRooms(game, userId)),
-  fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId))
+  fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId)),
+  checkRoomAvailability: (userId, roomId) => dispatch(checkRoomAvailability(userId, roomId))
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRooms);

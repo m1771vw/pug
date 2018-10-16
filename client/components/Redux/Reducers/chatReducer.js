@@ -7,6 +7,10 @@ import {
   SUBSCRIBE,
   CHANGE_CHATROOM,
   SEND_MESSAGE,
+  NOT_ALLOWED,
+  JOIN_ROOM,
+  LEAVE_ROOM,
+  UNSUBSCRIBE,
   NO_JOINED_ROOMS
 } from '../Constants'
 
@@ -89,11 +93,21 @@ const chatReducer = (state = initialState, action) => {
         text
       });
       return state;
+    case JOIN_ROOM:
+      console.log("REDUCER: Joining Room", action.roomId);
+      return state;
+    case LEAVE_ROOM:
+      console.log("REDUCER: LEAVING ROOM: ", action.roomId)
+      return state;
+    case UNSUBSCRIBE:
+      console.log("REDUCER: UNSUBSCRIBING ROOM: ", action.roomId)
+      return state;
     case DISCONNECTED:
     case CONNECTION_REQUEST:
+    case NOT_ALLOWED:
     default:
       return state;
   }
 }
-
+ 
 export default chatReducer;

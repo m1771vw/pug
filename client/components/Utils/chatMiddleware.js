@@ -1,4 +1,4 @@
-import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE} from '../Redux/Constants'
+import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE, JOIN_ROOM, UNSUBSCRIBE, LEAVE_ROOM } from '../Redux/Constants'
 import { extractMsgDetails } from './index';
 
 const _onReceive = (store, roomId) => msg => {
@@ -11,17 +11,21 @@ export default chatMiddleware = store => next => async action => {
   const { chatReducer } = store.getState();
   let { currentUser } = chatReducer;
   console.log("IN MIDDLEWARE:", action.type);
-  console.log("CURRENT USER:", currentUser);
+  // console.log("CURRENT USER:", currentUser);
 
-  if (action.type === SUBSCRIBE && !currentUser.roomSubscriptions[action.roomId]) {
+  if ((action.type === SUBSCRIBE || action.type === JOIN_ROOM) && !currentUser.roomSubscriptions[action.roomId]) {
     try {
       let { roomId } = action;
+
+      if (action.type === JOIN_ROOM) {
+        await currentUser.joinRoom({ roomId });
+      }
 
       let messages = await currentUser.fetchMessages({
         roomId,
         direction: 'older',
         limit: 100,
-      });
+      }); 
 
       console.table(messages);
 
@@ -42,6 +46,18 @@ export default chatMiddleware = store => next => async action => {
       });
     } catch (err) {
       console.error(err);
+    }
+  } else if ((action.type === UNSUBSCRIBE || action.type === LEAVE_ROOM)) {
+    try {
+      let { roomId } = action;
+      if(action.type === UNSUBSCRIBE) {
+        await currentUser.roomSubscriptions[roomId].cancel()
+      }
+      if(action.type === LEAVE_ROOM) {
+        await currentUser.leaveRoom({ roomId })
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
