@@ -9,7 +9,7 @@ import {
   CHATKIT_USER_NAME
 } from '../../config/info';
 
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 import { bubbleBackgroundColors } from '../../constants';
 
@@ -63,10 +63,9 @@ class ChatScreen extends React.Component {
     return bubbleBackgroundColors[usernameIndex];
   }
 
-  // TODO: - Still needs testing
-  leaveRoom = () => {
-    let { navigation, currentRoomId } = this.props;
-    console.log("ChatScreen: Leave Room pressed.");
+  _leaveRoom = () => {
+    let { navigation, currentRoomId, unsubscribeFromRoom, leaveRoom } = this.props;
+    console.log("CHATSCREEN: Leave Room pressed:", currentRoomId);
     unsubscribeFromRoom(currentRoomId);
     leaveRoom(currentRoomId);
     navigation.goBack();
@@ -84,7 +83,12 @@ class ChatScreen extends React.Component {
           }}
           renderBubble={this.renderBubble}
         />
+        {/* Temporary leave room button */}
+        <TouchableOpacity style={{borderWidth: 1, borderColor: 'black', width: 100, height: 25}} onPress={this._leaveRoom}>
+        <Text>Leave Room</Text>
+        </TouchableOpacity>
       </View>
+
     )
   }
 }

@@ -98,11 +98,9 @@ const chatReducer = (state = initialState, action) => {
       return state;
     case LEAVE_ROOM:
       console.log("REDUCER: LEAVING ROOM: ", action.roomId)
-      state.currentUser.leaveRoom({ roomId: action. roomId });
       return state;
     case UNSUBSCRIBE:
       console.log("REDUCER: UNSUBSCRIBING ROOM: ", action.roomId)
-      state.currentUser.roomSubscriptions[action.roomId].cancel();
       return state;
     case DISCONNECTED:
     case CONNECTION_REQUEST:

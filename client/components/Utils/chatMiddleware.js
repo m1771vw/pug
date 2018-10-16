@@ -1,4 +1,4 @@
-import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE, JOIN_ROOM } from '../Redux/Constants'
+import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE, JOIN_ROOM, UNSUBSCRIBE, LEAVE_ROOM } from '../Redux/Constants'
 import { extractMsgDetails } from './index';
 
 const _onReceive = (store, roomId) => msg => {
@@ -46,6 +46,18 @@ export default chatMiddleware = store => next => async action => {
       });
     } catch (err) {
       console.error(err);
+    }
+  } else if ((action.type === UNSUBSCRIBE || action.type === LEAVE_ROOM)) {
+    try {
+      let { roomId } = action;
+      if(action.type === UNSUBSCRIBE) {
+        await currentUser.roomSubscriptions[roomId].cancel()
+      }
+      if(action.type === LEAVE_ROOM) {
+        await currentUser.leaveRoom({ roomId })
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
