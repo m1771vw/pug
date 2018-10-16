@@ -18,8 +18,9 @@ export const ERROR_SUBSCRIBING = 'ERROR_SUBSCRIBING';
 export const CHANGE_CHATROOM = 'CHANGE_CHATROOM';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 
-export const CHECK_ROOM_AVAILABILITY = 'CHECK_ROOM_AVAILABILITY';
+// export const CHECK_ROOM_AVAILABILITY = 'CHECK_ROOM_AVAILABILITY';
 export const JOIN_ROOM               = 'JOIN_ROOM';
+export const NOT_ALLOWED             = 'NOT_ALLOWED';
 
 export const LEAVE_ROOM              = 'LEAVE_ROOM';
 export const UNSUBSCRIBE             = 'UNSUBSCRIBE';

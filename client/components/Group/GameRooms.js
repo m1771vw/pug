@@ -31,17 +31,14 @@ class GameRooms extends Component {
     navigation.navigate('Chatroom', { title: room.name });
   }
 
-  /** Add Join Room Logic  */
-  //TODO: - Test if works
   _joinRoom = room => () => {
-    const { navigation, changeChatRoom, checkRoomAvailability, joinRoom } = this.props;
-    // Axios call to check if room is full
+    const { navigation, changeChatRoom, checkRoomAvailability } = this.props;
     let allowed = checkRoomAvailability(CHATKIT_USER_NAME, room.id);
-    console.log("Trying to join room");
     if(allowed) {
       changeChatRoom(room.id);
       navigation.navigate('Chatroom', { title: room.name});
     } else {
+      // TODO: - Need to do something when cannot join room.
       console.log("Cannot join room");
     }
   }
@@ -69,12 +66,6 @@ class GameRooms extends Component {
             ))
           }
         </List>
-        {
-          /* 
-          Need to implement joining a room that I am currently not in; 
-          otherwise if I click the room it will yell that I am not authorized
-          */
-        }
         <List containerStyle={{ marginBottom: 20 }}>
           {
             joinableRooms.map((room) => (
@@ -100,8 +91,7 @@ const mapDispatchToProps = dispatch => ({
   changeChatRoom: roomId => dispatch(changeChatRoom(roomId)),
   fetchJoinableRooms: (game, userId) => dispatch(fetchJoinableRooms(game, userId)),
   fetchJoinedRooms: (game, userId) => dispatch(fetchJoinedRooms(game, userId)),
-  checkRoomAvailability: (userId, roomId) => dispatch(checkRoomAvailability(userId, roomId)),
-  joinRoom: (roomId) => dispatch(joinRoom(roomId))
+  checkRoomAvailability: (userId, roomId) => dispatch(checkRoomAvailability(userId, roomId))
 
 })
 

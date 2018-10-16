@@ -11,8 +11,8 @@ import {
   SUBSCRIBE,
   CHANGE_CHATROOM,
   SEND_MESSAGE,
-  CHECK_ROOM_AVAILABILITY,
   JOIN_ROOM,
+  NOT_ALLOWED,
   LEAVE_ROOM,
   UNSUBSCRIBE,
   NO_JOINED_ROOMS,
@@ -77,14 +77,13 @@ export const subscribeToAllJoined = userId => async dispatch => {
   }
 }
 
-// TODO: - Test Actions
 export const checkRoomAvailability = (userId, roomId) => async dispatch => {
   let {data} = await axios.get(`${SERVER_URL}/checkroom?userId=${userId}&roomId=${roomId}`);
-  console.log("Checking if allowed to join: ", data.allowed);
   if (data.allowed) {
     dispatch(joinRoom(roomId))
   } else {
-    dispatch({type: NOT_ALLOWED })
+    // TODO: - Need to do something when cannot join room.
+    dispatch({type: NOT_ALLOWED})
   }
 }
 

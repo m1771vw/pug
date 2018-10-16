@@ -7,7 +7,7 @@ import {
   SUBSCRIBE,
   CHANGE_CHATROOM,
   SEND_MESSAGE,
-  CHECK_ROOM_AVAILABILITY, 
+  NOT_ALLOWED,
   JOIN_ROOM,
   LEAVE_ROOM,
   UNSUBSCRIBE,
@@ -93,14 +93,7 @@ const chatReducer = (state = initialState, action) => {
         text
       });
       return state;
-      // TODO :- Check if this should be in here
-    case CHECK_ROOM_AVAILABILITY:
-      // Has 'allowed' accessible
-      return {
-        ...state // Check for room availability 
-      }
     case JOIN_ROOM:
-    // TODO: Change to ({ roomID }) ?
       console.log("REDUCER: Joining Room", action.roomId);
       return state;
     case LEAVE_ROOM:
@@ -113,6 +106,7 @@ const chatReducer = (state = initialState, action) => {
       return state;
     case DISCONNECTED:
     case CONNECTION_REQUEST:
+    case NOT_ALLOWED:
     default:
       return state;
   }
