@@ -55,6 +55,9 @@ class GameRooms extends Component {
     const { joinableRooms, joinedRooms } = this.props;
     return (
       <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 20 }}>
+          Joined Rooms
+        </Text>
         <List containerStyle={{ marginBottom: 20 }}>
           {
             joinedRooms.map((room) => (
@@ -66,6 +69,9 @@ class GameRooms extends Component {
             ))
           }
         </List>
+        <Text style={{ fontSize: 20 }}>
+          Joinable Rooms
+        </Text>
         <List containerStyle={{ marginBottom: 20 }}>
           {
             joinableRooms.map((room) => (
