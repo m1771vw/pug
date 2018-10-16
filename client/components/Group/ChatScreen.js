@@ -75,6 +75,7 @@ class ChatScreen extends React.Component {
     const { messages, sendMessage } = this.props;
     return (
       <View style={{ backgroundColor: "#F0F8FF", flex: 1 }}>
+        { messages.length === 0 && (<Text>Welcome to the Chatroom! Be the first to say Hello! 👋 </Text>)}
         <GiftedChat
           messages={messages}
           onSend={sendMessage}
