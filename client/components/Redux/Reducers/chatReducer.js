@@ -102,7 +102,6 @@ const chatReducer = (state = initialState, action) => {
     case JOIN_ROOM:
     // TODO: Change to ({ roomID }) ?
       console.log("REDUCER: Joining Room", action.roomId);
-      state.currentUser.joinRoom({ roomId: action.roomId });
       return state;
     case LEAVE_ROOM:
       console.log("REDUCER: LEAVING ROOM: ", action.roomId)

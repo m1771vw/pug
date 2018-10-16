@@ -33,13 +33,12 @@ class GameRooms extends Component {
 
   /** Add Join Room Logic  */
   //TODO: - Test if works
-  joinRoom = room => () => {
-    const { navigation, changeChatRoom, checkRoomAvailability } = this.props;
+  _joinRoom = room => () => {
+    const { navigation, changeChatRoom, checkRoomAvailability, joinRoom } = this.props;
     // Axios call to check if room is full
     let allowed = checkRoomAvailability(CHATKIT_USER_NAME, room.id);
     console.log("Trying to join room");
     if(allowed) {
-      joinRoom(room.id);
       changeChatRoom(room.id);
       navigation.navigate('Chatroom', { title: room.name});
     } else {
@@ -80,7 +79,7 @@ class GameRooms extends Component {
           {
             joinableRooms.map((room) => (
               <ListItem
-                onPress={this.joinRoom(room)}
+                onPress={this._joinRoom(room)}
                 key={room.id}
                 title={room.name}
               />

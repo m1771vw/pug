@@ -15,6 +15,10 @@ export const extractMsgDetails = (data) => {
 
 export const getChatMessages = state => {
   const { rooms, currentRoomId } = state;
-  const { messages } = rooms.find(rm => rm.roomId === currentRoomId);
-  return messages;
+  let room = rooms.find(rm => rm.roomId === currentRoomId);
+  if (room) {
+    return room.messages;
+  } else {
+    return [];
+  }
 } 
