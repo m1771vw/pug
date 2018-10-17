@@ -16,7 +16,8 @@ import {
   LEAVE_ROOM,
   UNSUBSCRIBE,
   NO_JOINED_ROOMS,
-  ERROR_SUBSCRIBING
+  ERROR_SUBSCRIBING,
+  ADD_USER_TO_ROOM
 } from '../Constants'
 
 import {CHATKIT_TOKEN_PROVIDER_ENDPOINT, CHATKIT_INSTANCE_LOCATOR, SERVER_URL} from '../../../config/info';
@@ -92,6 +93,8 @@ export const joinRoom = roomId => ({type: JOIN_ROOM, roomId})
 export const leaveRoom = roomId => ({type: LEAVE_ROOM, roomId})
 
 export const unsubscribeFromRoom = roomId => ({type: UNSUBSCRIBE, roomId})
+
+export const addUserToRoom = (userId, roomId) => ({type: ADD_USER_TO_ROOM, userId, roomId})
 
 /**
  * Interacts with our /server

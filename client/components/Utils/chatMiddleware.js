@@ -1,4 +1,4 @@
-import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE, JOIN_ROOM, UNSUBSCRIBE, LEAVE_ROOM } from '../Redux/Constants'
+import { SUBSCRIBE, INIT_MESSAGES, NEW_MESSAGE, JOIN_ROOM, UNSUBSCRIBE, LEAVE_ROOM, ADD_USER_TO_ROOM } from '../Redux/Constants'
 import { extractMsgDetails } from './index';
 
 const _onReceive = (store, roomId) => msg => {
@@ -59,7 +59,21 @@ export default chatMiddleware = store => next => async action => {
     } catch (err) {
       console.log(err);
     }
+  } else if ((action.type === ADD_USER_TO_ROOM)) {
+    console.log("add user inside middleware")
+    currentUser.addUserToRoom({
+      userId: 'william',
+      roomId: 18167744
+    })
+      .then(() => {
+        console.log('Added william to room 18167744')
+      })
+      .catch(err => {
+        console.log(`Error adding william to room 18167744: ${err}`)
+      })
   }
+
+
 
   return next(action);
 }

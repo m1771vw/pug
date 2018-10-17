@@ -24,3 +24,5 @@ export const NOT_ALLOWED             = 'NOT_ALLOWED';
 
 export const LEAVE_ROOM              = 'LEAVE_ROOM';
 export const UNSUBSCRIBE             = 'UNSUBSCRIBE';
+
+export const ADD_USER_TO_ROOM       = 'ADD_USER_TO_ROOM';

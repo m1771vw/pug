@@ -11,7 +11,8 @@ import {
   JOIN_ROOM,
   LEAVE_ROOM,
   UNSUBSCRIBE,
-  NO_JOINED_ROOMS
+  NO_JOINED_ROOMS,
+  ADD_USER_TO_ROOM
 } from '../Constants'
 
 const _createRoom = ({ roomId, messages }) => ({
@@ -105,6 +106,7 @@ const chatReducer = (state = initialState, action) => {
     case DISCONNECTED:
     case CONNECTION_REQUEST:
     case NOT_ALLOWED:
+    case ADD_USER_TO_ROOM:
     default:
       return state;
   }

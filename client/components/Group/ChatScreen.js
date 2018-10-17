@@ -15,7 +15,7 @@ import { bubbleBackgroundColors } from '../../constants';
 
 import { getChatMessages } from '../Utils'
 
-import { sendMessage, leaveRoom, unsubscribeFromRoom } from '../Redux/Actions'
+import { sendMessage, leaveRoom, unsubscribeFromRoom, addUserToRoom } from '../Redux/Actions'
 
 
 class ChatScreen extends React.Component {
@@ -71,6 +71,13 @@ class ChatScreen extends React.Component {
     navigation.goBack();
   }
 
+  _addUserToRoom = () => {
+    console.log("Add User pressed");
+    let userId = 'william';
+    let roomId = 18167744;
+    this.props.addUserToRoom(userId, roomId)
+  }
+
   render() {
     const { messages, sendMessage } = this.props;
     return (
@@ -88,6 +95,9 @@ class ChatScreen extends React.Component {
         <TouchableOpacity style={{borderWidth: 1, borderColor: 'black', width: 100, height: 25}} onPress={this._leaveRoom}>
         <Text>Leave Room</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={{borderWidth: 1, borderColor: 'black', width: 100, height: 25}} onPress={this._addUserToRoom}>
+        <Text>Add User to Room</Text>
+        </TouchableOpacity>
       </View>
 
     )
@@ -103,7 +113,8 @@ const mapStateToProps = ({ chatReducer }) => ({
 const mapDispatchToProps = dispatch => ({
   sendMessage: ([message]) => dispatch(sendMessage(message.text)),
   unsubscribeFromRoom: roomId => dispatch(unsubscribeFromRoom(roomId)),
-  leaveRoom: roomId => dispatch(leaveRoom(roomId))
+  leaveRoom: roomId => dispatch(leaveRoom(roomId)),
+  addUserToRoom: (userId, roomId) => dispatch(addUserToRoom(userId, roomId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
